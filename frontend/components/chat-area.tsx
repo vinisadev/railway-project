@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import type React from "react"
 import { useEffect, useState, useRef } from "react"
 import axios from "axios"
+import { io, Socket } from "socket.io-client"
 
 interface Message {
   id: number
@@ -21,8 +22,11 @@ export default function ChatArea() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const socketRef = useRef<Socket | null>(null)
 
   useEffect(() => {
+    socketRef.current = io("http://localhost:3000")
+
     const fetchMessages = async () => {
       try {
         const response = await axios.get('/api/messages')
@@ -44,8 +48,14 @@ export default function ChatArea() {
     }
     
     fetchMessages()
-    const interval = setInterval(fetchMessages, 500)
-    return () => clearInterval(interval)
+    
+    socketRef.current.on('newMessage', (newMessage: Message) => {
+      setMessages((prevMessages) => [...prevMessages, newMessage])
+    })
+
+    return () => {
+      socketRef.current?.disconnect()
+    }
   }, [])
 
   const sendMessage = async () => {

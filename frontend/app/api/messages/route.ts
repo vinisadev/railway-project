@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getIo } from "@/lib/socket"
 
 type Message = {
   id: number,
@@ -22,6 +23,10 @@ export async function POST(req: NextRequest) {
     const messageData: Message = await req.json()
     messages.push(messageData)
     console.log("Message added: ", messageData)
+
+    const io = getIo()
+    io.emit('newMessage', messageData)
+
     return NextResponse.json({
       success: true,
       status: 200
