@@ -1,6 +1,6 @@
 "use client"
 import { AtSign, Gift, PlusCircle, Smile, Paperclip } from "lucide-react"
-// import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/input"
 import type React from "react"
 import { useEffect, useState, useRef } from "react"
 import axios from "axios"
@@ -102,7 +102,7 @@ export default function ChatArea() {
           <button className="text-gray-400 hover:text-gray-200 p-2">
             <PlusCircle size={20} />
           </button>
-          {/* <Input
+          <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
@@ -113,21 +113,7 @@ export default function ChatArea() {
             }}
             placeholder="Message #chit-chat"
             className="bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-200"
-          /> */}
-          <textarea
-  value={input}
-  onChange={(e) => setInput(e.target.value)}
-  onKeyDown={(e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault(); // Prevent default behavior (new line)
-      sendMessage(); // Send the message
-    }
-    // If Shift + Enter is pressed, allow a new line (default behavior)
-  }}
-  placeholder="Message #chit-chat"
-  className="bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-200 flex-1 resize-none"
-  rows={1} // Start with one row, but allow it to grow
-/>
+          />
           <button className="text-gray-400 hover:text-gray-200 p-2">
             <Gift size={20} />
           </button>
