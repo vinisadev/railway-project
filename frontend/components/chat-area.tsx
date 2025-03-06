@@ -5,7 +5,7 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import axios from "axios"
 
-interface Message  {
+interface Message {
   id: number
   user: string
   avatar: string
@@ -19,28 +19,38 @@ interface MessageResponse {
 
 export default function ChatArea() {
   const [messages, setMessages] = useState<Message[]>([])
+  const [debug, setDebug] = useState<string>("")
 
   useEffect(() => {
     const fetchMessages = async () => {
       try {
         const response = await axios.get('/api/messages')
         console.log("API Response: ", response.data)
-
+        
         if (Array.isArray(response.data.messages)) {
+          console.log("Parsing messages array...");
+          // Extract the actual message objects from the nested structure
           const extractedMessages = response.data.messages.map(
-            (item: MessageResponse) => item.message
+            (item: MessageResponse) => {
+              console.log("Item being processed:", item);
+              console.log("Message from item:", item.message);
+              return item.message;
+            }
           )
-          setMessages(extractedMessages)
+          console.log("Extracted messages:", extractedMessages);
+          setDebug(JSON.stringify(extractedMessages, null, 2));
+          setMessages(extractedMessages);
         } else {
           console.error("Received messages data is not an array: ", response.data.messages)
+          setDebug("Error: messages is not an array");
         }
       } catch (error) {
         console.error("Error fetching messages: ", error)
+        setDebug(`Error: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
-
+    
     fetchMessages()
-
     const interval = setInterval(fetchMessages, 5000)
     return () => clearInterval(interval)
   }, [])
@@ -55,7 +65,19 @@ export default function ChatArea() {
           chit-chat
         </div>
       </div>
+      
+      {/* Debug info */}
+      {debug && (
+        <div className="p-2 bg-red-800 text-white text-xs">
+          <pre>{debug}</pre>
+        </div>
+      )}
+      
       <div className="flex-1 overflow-y-auto p-4">
+        {messages.length === 0 && (
+          <div className="text-gray-400 text-center py-4">No messages to display</div>
+        )}
+        
         {messages.map((message) => (
           <div key={message.id} className="mb-4 flex">
             <img
@@ -73,6 +95,7 @@ export default function ChatArea() {
           </div>
         ))}
       </div>
+      
       <div className="p-4">
         <div className="bg-[#40444b] rounded-lg p-2 flex items-center">
           <button className="text-gray-400 hover:text-gray-200 p-2">
