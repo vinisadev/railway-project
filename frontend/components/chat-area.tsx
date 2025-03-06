@@ -1,44 +1,42 @@
+"use client"
 import { AtSign, Gift, PlusCircle, Smile, Paperclip } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import type React from "react"
+import { useEffect, useState } from "react"
+import axios from "axios"
+
+interface Message  {
+  id: number
+  user: string
+  avatar: string
+  time: string
+  content: string
+}
 
 export default function ChatArea() {
-  const messages = [
-    {
-      id: 1,
-      user: "JohnDoe",
-      avatar: "/placeholder.jpg",
-      time: "Today at 12:30 PM",
-      content: "Hey everyone! How's it going?",
-    },
-    {
-      id: 2,
-      user: "JaneSmith",
-      avatar: "/placeholder.jpg",
-      time: "Today at 12:32 PM",
-      content: "Pretty good! Working on a new project.",
-    },
-    {
-      id: 3,
-      user: "AlexJohnson",
-      avatar: "/placeholder.jpg",
-      time: "Today at 12:35 PM",
-      content: "Nice! What kind of project?",
-    },
-    {
-      id: 4,
-      user: "JaneSmith",
-      avatar: "/placeholder.jpg",
-      time: "Today at 12:37 PM",
-      content: "It's a chat application that looks like Discord 😉",
-    },
-    {
-      id: 5,
-      user: "SamWilson",
-      avatar: "/placeholder.jpg",
-      time: "Today at 12:40 PM",
-      content: "That sounds awesome! Can't wait to see it.",
-    },
-  ]
+  const [messages, setMessages] = useState<Message[]>([])
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get('/api/messages')
+        console.log("API Response: ", response.data)
+
+        if (Array.isArray(response.data.messages)) {
+          setMessages(response.data.messages)
+        } else {
+          console.error("Received messages data is not an array: ", response.data.messages)
+        }
+      } catch (error) {
+        console.error("Error fetching messages: ", error)
+      }
+    }
+
+    fetchMessages()
+
+    const interval = setInterval(fetchMessages, 5000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <div className="flex-1 flex flex-col">
