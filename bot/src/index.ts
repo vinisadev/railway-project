@@ -39,11 +39,13 @@ client.on('messageCreate', async message => {
 
 async function handleWebhookMessage(content: string) {
   const messageData = {
-    id: Date.now(),
-    user: 'Webhook Bot',
-    avatar: `${process.env.BACKEND_URL}/bot-picture.avif`,
-    time: `Today at ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`,
-    content: content
+    message: {
+      id: Date.now(),
+      user: 'Webhook Bot',
+      avatar: `${process.env.BACKEND_URL}/bot-picture.avif`,
+      time: `Today at ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`,
+      content: content
+    }
   }
 
   try {
