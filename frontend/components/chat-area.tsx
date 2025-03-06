@@ -19,6 +19,7 @@ interface MessageResponse {
 
 export default function ChatArea() {
   const [messages, setMessages] = useState<Message[]>([])
+  const [input, setInput] = useState("")
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -45,6 +46,15 @@ export default function ChatArea() {
     const interval = setInterval(fetchMessages, 5000)
     return () => clearInterval(interval)
   }, [])
+
+  const sendMessage = async () => {
+    try {
+      await axios.post('/api/send-message', { content: input })
+      setInput("")
+    } catch (error) {
+      console.error("Error sending message: ", error)
+    }
+  }
 
   return (
     <div className="flex-1 flex flex-col">
@@ -86,6 +96,13 @@ export default function ChatArea() {
             <PlusCircle size={20} />
           </button>
           <Input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                sendMessage()
+              }
+            }}
             placeholder="Message #chit-chat"
             className="bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-200"
           />
