@@ -106,8 +106,9 @@ export default function ChatArea() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                sendMessage()
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault(); // Prevent default behavior (new line)
+                sendMessage(); // Send the message
               }
             }}
             placeholder="Message #chit-chat"
