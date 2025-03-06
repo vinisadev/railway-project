@@ -18,9 +18,17 @@ client.on('messageCreate', async message => {
   console.log(`New message: ${message.content}`)
 
   try {
-    await axios.post(process.env.BACKEND_URL + '/api/messages', {
-      messages: message.content
-    })
+    const formattedMessage = {
+      message: {
+        id: Date.now(),
+        user: message.author.username,
+        avatar: message.author.displayAvatarURL() || "/placeholder.jpg",
+        time: `Today at ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`,
+        content: message.content
+      }
+    }
+
+    await axios.post(process.env.BACKEND_URL + '/api/messages', formattedMessage)
   } catch (error) {
     console.error('Error sending messages to NextJS app: ', error)
   }

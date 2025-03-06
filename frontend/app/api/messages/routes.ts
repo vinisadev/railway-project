@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const messages: string[] = []
+type Message = {
+  id: number,
+  user: string,
+  avatar: string,
+  time: string,
+  content: string
+}
+
+const messages: Message[] = []
 
 export async function GET() {
   console.log("[/messages GET]: Messages got")
