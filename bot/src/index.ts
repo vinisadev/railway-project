@@ -28,7 +28,7 @@ client.on('messageCreate', async message => {
       }
     }
 
-    await axios.post(process.env.BACKEND_URL + '/api/messages', formattedMessage)
+    await axios.post(`${process.env.BACKEND_URL}/api/messages`, formattedMessage)
   } catch (error) {
     console.error('Error sending messages to NextJS app: ', error)
   }
