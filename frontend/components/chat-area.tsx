@@ -2,7 +2,7 @@
 import { AtSign, Gift, PlusCircle, Smile, Paperclip } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import type React from "react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import axios from "axios"
 
 interface Message {
@@ -20,6 +20,7 @@ interface MessageResponse {
 export default function ChatArea() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -55,6 +56,12 @@ export default function ChatArea() {
       console.error("Error sending message: ", error)
     }
   }
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+    }
+  }, [messages])
 
   return (
     <div className="flex-1 flex flex-col">
