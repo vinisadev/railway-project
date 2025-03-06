@@ -43,7 +43,7 @@ export default function ChatArea() {
     }
     
     fetchMessages()
-    const interval = setInterval(fetchMessages, 5000)
+    const interval = setInterval(fetchMessages, 500)
     return () => clearInterval(interval)
   }, [])
 
