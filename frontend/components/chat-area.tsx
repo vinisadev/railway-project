@@ -13,6 +13,10 @@ interface Message  {
   content: string
 }
 
+interface MessageResponse {
+  message: Message
+}
+
 export default function ChatArea() {
   const [messages, setMessages] = useState<Message[]>([])
 
@@ -23,7 +27,10 @@ export default function ChatArea() {
         console.log("API Response: ", response.data)
 
         if (Array.isArray(response.data.messages)) {
-          setMessages(response.data.messages)
+          const extractedMessages = response.data.messages.map(
+            (item: MessageResponse) => item.message
+          )
+          setMessages(extractedMessages)
         } else {
           console.error("Received messages data is not an array: ", response.data.messages)
         }

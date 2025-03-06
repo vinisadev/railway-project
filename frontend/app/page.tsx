@@ -1,4 +1,3 @@
-"use client"
 import ChannelsList from "@/components/channels-list";
 import ChatArea from "@/components/chat-area";
 import MembersList from "@/components/members-list";
