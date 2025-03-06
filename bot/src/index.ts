@@ -41,7 +41,7 @@ async function handleWebhookMessage(content: string) {
   const messageData = {
     id: Date.now(),
     user: 'Webhook Bot',
-    avatar: '/bot-picture.avif',
+    avatar: `${process.env.BACKEND_URL}/bot-picture.avif`,
     time: `Today at ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`,
     content: content
   }
