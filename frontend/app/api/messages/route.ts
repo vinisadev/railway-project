@@ -11,15 +11,12 @@ type Message = {
 const messages: Message[] = []
 
 export async function GET() {
-  console.log("[/messages GET]: Messages got")
-  console.log("Messages: ", messages)
   return NextResponse.json({
     messages: messages
   })
 }
 
 export async function POST(req: NextRequest) {
-  console.log("[/messages POST]: Message sent")
 
   try {
     const messageData: Message = await req.json()

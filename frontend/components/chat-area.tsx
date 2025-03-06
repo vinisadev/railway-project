@@ -19,34 +19,25 @@ interface MessageResponse {
 
 export default function ChatArea() {
   const [messages, setMessages] = useState<Message[]>([])
-  const [debug, setDebug] = useState<string>("")
 
   useEffect(() => {
     const fetchMessages = async () => {
       try {
         const response = await axios.get('/api/messages')
-        console.log("API Response: ", response.data)
         
         if (Array.isArray(response.data.messages)) {
-          console.log("Parsing messages array...");
           // Extract the actual message objects from the nested structure
           const extractedMessages = response.data.messages.map(
             (item: MessageResponse) => {
-              console.log("Item being processed:", item);
-              console.log("Message from item:", item.message);
               return item.message;
             }
           )
-          console.log("Extracted messages:", extractedMessages);
-          setDebug(JSON.stringify(extractedMessages, null, 2));
           setMessages(extractedMessages);
         } else {
           console.error("Received messages data is not an array: ", response.data.messages)
-          setDebug("Error: messages is not an array");
         }
       } catch (error) {
         console.error("Error fetching messages: ", error)
-        setDebug(`Error: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
     
@@ -65,13 +56,6 @@ export default function ChatArea() {
           chit-chat
         </div>
       </div>
-      
-      {/* Debug info */}
-      {debug && (
-        <div className="p-2 bg-red-800 text-white text-xs">
-          <pre>{debug}</pre>
-        </div>
-      )}
       
       <div className="flex-1 overflow-y-auto p-4">
         {messages.length === 0 && (
